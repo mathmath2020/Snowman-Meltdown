@@ -26,6 +26,19 @@ def display_game_state(mistakes, secret_word, guessed_letters):
     print()
 
 
+def get_valid_guess(guessed_letters):
+    """Prompts the user until a single, unguessed alphabetical character is entered."""
+    while True:
+        guess = input("Guess a letter: ").lower().strip()
+
+        if len(guess) != 1 or not guess.isalpha():
+            print("Invalid input. Please enter a single alphabetical letter (A-Z).\n")
+        elif guess in guessed_letters:
+            print(f"You already guessed '{guess}'. Please choose a different letter.\n")
+        else:
+            return guess
+
+
 def play_game():
     secret_word = get_random_word()
     guessed_letters = []
@@ -36,19 +49,8 @@ def play_game():
 
     while mistakes < max_mistakes:
         display_game_state(mistakes, secret_word, guessed_letters)
-        guess = input("Guess a letter: ").lower().strip()
+        guess = get_valid_guess(guessed_letters)
 
-        # Validate single alphabetical character
-        if len(guess) != 1 or not guess.isalpha():
-            print("Please enter a single valid letter.\n")
-            continue
-
-        # Prevent penalizing repeated guesses
-        if guess in guessed_letters:
-            print(f"You already guessed '{guess}'. Try another letter.\n")
-            continue
-
-        # Update guessed letters and evaluate guess
         guessed_letters.append(guess)
 
         if guess in secret_word:
@@ -57,12 +59,10 @@ def play_game():
             mistakes += 1
             print(f"Sorry, '{guess}' is not in the word.")
 
-        # Check win condition
         if all(letter in guessed_letters for letter in secret_word):
             display_game_state(mistakes, secret_word, guessed_letters)
             print("Congratulations, you saved the snowman!")
             return
 
-    # Loss condition when max_mistakes is reached
     display_game_state(mistakes, secret_word, guessed_letters)
     print(f"Game Over! The snowman melted. The secret word was '{secret_word}'.")
