@@ -40,12 +40,13 @@ def get_valid_guess(guessed_letters):
 
 
 def play_game():
+    """Runs a single round of Snowman Meltdown."""
     secret_word = get_random_word()
     guessed_letters = []
     mistakes = 0
     max_mistakes = len(STAGES) - 1
 
-    print("Welcome to Snowman Meltdown!")
+    print("\nWelcome to Snowman Meltdown!")
 
     while mistakes < max_mistakes:
         display_game_state(mistakes, secret_word, guessed_letters)
@@ -66,3 +67,19 @@ def play_game():
 
     display_game_state(mistakes, secret_word, guessed_letters)
     print(f"Game Over! The snowman melted. The secret word was '{secret_word}'.")
+
+
+def start_game():
+    """Manages the replay loop so the user can play multiple rounds."""
+    while True:
+        play_game()
+
+        while True:
+            replay = input("\nDo you want to play again? (y/n): ").lower().strip()
+            if replay in ("y", "yes"):
+                break
+            elif replay in ("n", "no"):
+                print("Thanks for playing Snowman Meltdown! Goodbye!")
+                return
+            else:
+                print("Please enter 'y' for yes or 'n' for no.")
